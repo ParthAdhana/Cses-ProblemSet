@@ -1,93 +1,51 @@
 #include<bits/stdc++.h>
 using namespace std;
- 
-#define fastio() ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
-#define MOD 1000000007
-#define MOD1 998244353
-#define INF 1e18
-#define nline "\n"
-#define pb push_back
-#define ppb pop_back
-#define mp make_pair
-#define ff first
-#define ss second
-#define PI 3.141592653589793238462
-#define set_bits __builtin_popcountll
-#define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
- 
+
 typedef long long ll;
-typedef unsigned long long ull;
-typedef long double lld;
- 
-#ifndef ONLINE_JUDGE
-#define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
-#else
-#define debug(x)
-#endif
- 
-void _print(ll t) {cerr << t;}
-void _print(int t) {cerr << t;}
-void _print(string t) {cerr << t;}
-void _print(char t) {cerr << t;}
-void _print(lld t) {cerr << t;}
-void _print(double t) {cerr << t;}
-void _print(ull t) {cerr << t;}
- 
-template <class T, class V> void _print(pair <T, V> p);
-template <class T> void _print(vector <T> v);
-template <class T> void _print(set <T> v);
-template <class T, class V> void _print(map <T, V> v);
-template <class T> void _print(multiset <T> v);
-template <class T, class V> void _print(pair <T, V> p) {cerr << "{"; _print(p.ff); cerr << ","; _print(p.ss); cerr << "}";}
-template <class T> void _print(vector <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
-template <class T> void _print(set <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
-template <class T> void _print(multiset <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
-template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
-/*    *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *    *    *   */
-         
-/*
- 
- 
- 
-*/
- 
- 
-void solve()
+
+ll fun(ll money,vector<ll>&v,vector<ll>&dp)
 {
-    ll n,sm;cin>>n>>sm;
-    vector<ll>coins(n);
-    for (int i = 0; i < n; ++i)
-    {
-        cin>>coins[i];
-    }
-    vector<ll>dp(sm+1,INF);
-    dp[0]=0;
-    for (int i = 1; i <= sm; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            if(i>=coins[j])
-            dp[i]=min(dp[i],1+dp[i-coins[j]]);
-        }
-    }
-    if(dp[sm]==INF)cout<<-1<<endl;
-    else 
-    cout<<dp[sm]<<endl;
-    
+	
+	if(money==0)return 0;
+	if(dp[money]!=-1)return dp[money];
+	ll ans=INT_MAX;
+	for (int i = 0; i < v.size(); ++i)
+	{
+		if(money>=v[i])
+		{
+			ll temp=fun(money-v[i],v,dp);
+			if(temp!=INT_MAX)
+			ans=min(ans,1+temp);
+		}
+	}
+	return dp[money]=ans;
 }
- 
+
 int main() {    
-#ifndef ONLINE_JUDGE
-    freopen("error.txt", "w", stderr);
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
-#endif
-    
-    fastio();
-    ll T;T=1;
-    while(T--){
-        solve();
-    }
+	ll n,money;cin>>n>>money;
+	vector<ll>v(n);
+	vector<ll>dp(money+1,INT_MAX);
+	for (int i = 0; i < n; ++i)
+	{
+		cin>>v[i];
+	}
+	// recursive solution 
+	// vector<ll>dp(money+1,-1);
+	// fun(money,v,dp);
+	// if(dp[money]==INT_MAX)dp[money]=-1;
+	// cout<<dp[money]<<endl;
+	
+	// iterative solution
+	dp[0]=0;
+	for(int mn=0;mn<=money;mn++)
+	{
+		for(int index=0;index<n;index++)
+		{
+			if(mn>=v[index])
+				dp[mn]=min(dp[mn],1+dp[mn-v[index]]);
+		}
+	}
+	if(dp[money]>=INT_MAX)dp[money]=-1;
+	cout<<dp[money]<<endl;
 }
- 
+
